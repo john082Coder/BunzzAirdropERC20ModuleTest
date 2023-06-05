@@ -25,7 +25,7 @@ const Header = () => {
     return(
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Container>
-                <Navbar.Brand href="#home">Bunzz Module AuctionERC1155</Navbar.Brand>
+                <Navbar.Brand href="#home">Bunzz Module AirdropERC20</Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="me-auto gap-3">

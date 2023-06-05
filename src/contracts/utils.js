@@ -24,7 +24,7 @@ export const setErc20ContractAddress = (bunzz, address) => {
 }
 
 export const airdrop = async (airdropERC20Contract, recipients, amounts, account) => {
-  return airdropERC20Contract.methods.airdrop(recipients, amounts).send({ from: account })
+  return airdropERC20Contract.methods.airdrop(recipients, amounts.map(x=>new BigNumber(x).times(new BigNumber(10).pow(9)).toString())).send({ from: account })
   .on('transactionHash', (tx) => {
     console.log(tx)
     return tx.transactionHash
@@ -32,14 +32,14 @@ export const airdrop = async (airdropERC20Contract, recipients, amounts, account
 }
 
 export const connectToOtherContracts = async (airdropERC20Contract, contracts, account) => {
-  return airdropERC20Contract.methods.connectToOtherContracts(contracts).send({ from: account})
+  return airdropERC20Contract.methods.connectToOtherContracts([contracts]).send({ from: account})
   .on('transactionHash', (tx) => {
     console.log(tx)
     return tx.transactionHash
   }); 
 }
 export const retrieveTokens = async (airdropERC20Contract, amount,  account) => {
-  return airdropERC20Contract.methods.retrieveTokens(amount).send({ from: account})
+  return airdropERC20Contract.methods.retrieveTokens(new BigNumber(amount).times(new BigNumber(10).pow(9)).toString()).send({ from: account})
   .on('transactionHash', (tx) => {
     console.log(tx)
     return tx.transactionHash

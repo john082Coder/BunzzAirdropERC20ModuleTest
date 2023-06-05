@@ -15,22 +15,33 @@ const Creator = () => {
     const [tokenAddress, setTokenAddress] = useState("");
     const [recipients, setRecipients] = useState([]);
     const [recipientsText, setRecipientsText] = useState();
+    const [amounts, setAmounts] = useState([]);
+    const [amountsText, setAmountsText] = useState();
 
 
-    const [startPrice, setStartPrice] = useState(0);
-    const [desiredPrice, setDesiredPrice] = useState(0);
-    const [nftAmount, setNFTAmount] = useState(0);
-    const [startTime, setStartTime] = useState(0);
-    const [endTime, setEndTime] = useState(0);
 
-    const[bidAmount, setBidAmount] = useState(0);
-    const[auctionID, setAuctionID] = useState(0);
+    const[retrieveAmount, setRetrieveAmount] = useState(0);
+
+    const[maxReciptCnt, setMaxReciptCnt] = useState(0);
 
     const[claimAuctionId, setClaimAuctionId] = useState(0);
 
     const [pendingConnectToOtherContracts, setPendingConnectToOtherContracts] = useState(false);
     const [pendingAirdrop, setPendingAirdrop] = useState(false);
-    const [pendingAddBid, setPendingAddBid] = useState(false);
+    const [pendingRetrieveTokens, setPendingRetrieveTokens] = useState(false);
+    const [pendingSetMaxRecipientCount, setPendingSetMaxRecipientCount] = useState(false);
+
+    useEffect(() => {
+        if(recipientsText && amountsText)
+        {
+         var array1 = recipientsText.replace(' ', '').split(','); 
+         setRecipients(array1);
+         var array2 = amountsText.replace(' ', '').split(","); 
+         setAmounts(array2);
+         console.log("array1 = ", array1);
+        }
+   
+       }, [recipientsText, amountsText]);
 
   
     return (
@@ -44,7 +55,7 @@ const Creator = () => {
                         </Form.Group>
                             {!pendingConnectToOtherContracts ?
                                 <Button className="mx-3 mt-2" variant="dark" onClick={async () => {
-                                    setPending(true);
+                                    setPendingConnectToOtherContracts(true);
                                 try {
                                     let txHash;
                                     txHash = await connectToOtherContracts(
@@ -73,10 +84,10 @@ const Creator = () => {
                             </Button>
                         }
                         <Form.Group className="mb-3" controlId="formBasicEmail">
-                            <Form.Label>Input BidAmount</Form.Label>
-                            <Form.Control type="email" placeholder="Enter Amount" value={bidAmount} onChange={(val) => setBidAmount(val.target.value)} />
-                            <Form.Label>Input AuctionId</Form.Label>
-                            <Form.Control type="email" placeholder="Enter ID" value={auctionID} onChange={(val) => setAuctionID(val.target.value)} />  
+                            <Form.Label>Input Recipients</Form.Label>
+                            <Form.Control type="email" placeholder="Enter Recipients" value={recipientsText} onChange={(val) => setRecipientsText(val.target.value)} />
+                            <Form.Label>Input Amounts</Form.Label>
+                            <Form.Control type="email" placeholder="Enter Amounts" value={amountsText} onChange={(val) => setAmountsText(val.target.value)} />  
                         </Form.Group>
 
                         {!pendingAirdrop ?
@@ -86,9 +97,9 @@ const Creator = () => {
                                     let txHash;
                                     
                                     txHash = await airdrop(
-                                        auctionERC1155Contract,
-                                        bidAmount,
-                                        auctionID,
+                                        airdropERC20Contract,
+                                        recipients,
+                                        amounts,
                                         account,
                                     );
                                 
@@ -114,32 +125,33 @@ const Creator = () => {
                                     />{` `} Airdrop
                             </Button>
                         }
-                         <Form.Group className="mb-3" controlId="formBasicEmail">
-                            <Form.Label>Input AuctionId</Form.Label>
-                            <Form.Control type="email" placeholder="Enter ID" value={claimAuctionId} onChange={(val) => setClaimAuctionId(val.target.value)} />
+                        <Form.Group className="mb-3" controlId="formBasicEmail">
+                            <Form.Label>Input Retrieve Amounts</Form.Label>
+                            <Form.Control type="email" placeholder="Enter amounts" value={retrieveAmount} onChange={(val) => setRetrieveAmount(val.target.value)} />
                         </Form.Group>
-                        {!pendingClaim ?
+
+                        {!pendingRetrieveTokens ?
                                 <Button className="mx-3 mt-2" variant="dark" onClick={async () => {
-                                    setPendingClaim(true);
+                                    setPendingRetrieveTokens(true);
                                 try {
                                     let txHash;
                                     
-                                    txHash = await claim(
-                                        auctionERC1155Contract,
-                                        claimAuctionId,
+                                    txHash = await retrieveTokens(
+                                        airdropERC20Contract,
+                                        retrieveAmount,
                                         account,
                                     );
                                 
                                     console.log(txHash);
-                                    setPendingClaim(false);
+                                    setPendingRetrieveTokens(false);
                                     
                                 } catch (e) {
                                     console.log(e);
-                                    setPendingClaim(false);
+                                    setPendingRetrieveTokens(false);
                                     
                                 }
                             }}>
-                                Claim
+                                RetrieveTokens
                             </Button>
                             :
                             <Button className="mx-3 mt-2" variant="dark">
@@ -149,10 +161,51 @@ const Creator = () => {
                                     size="sm"
                                     role="status"
                                     aria-hidden="true"
-                                    />{` `} Claim
+                                    />{` `} RetrieveTokens
                             </Button>
                         }
+                        <Form.Group className="mb-3" controlId="formBasicEmail">
+                            <Form.Label>Input Max Recipient Count</Form.Label>
+                            <Form.Control type="email" placeholder="Enter amounts" value={retrieveAmount} onChange={(val) => setRetrieveAmount(val.target.value)} />
+                        </Form.Group>
+                        {!pendingSetMaxRecipientCount ?
+                                <Button className="mx-3 mt-2" variant="dark" onClick={async () => {
+                                    setPendingSetMaxRecipientCount(true);
+                                try {
+                                    let txHash;
+                                    
+                                    txHash = await retrieveTokens(
+                                        airdropERC20Contract,
+                                        retrieveAmount,
+                                        account,
+                                    );
+                                
+                                    console.log(txHash);
+                                    setPendingSetMaxRecipientCount(false);
+                                    
+                                } catch (e) {
+                                    console.log(e);
+                                    setPendingSetMaxRecipientCount(false);
+                                    
+                                }
+                            }}>
+                                SetMaxRecipientCount
+                            </Button>
+                            :
+                            <Button className="mx-3 mt-2" variant="dark">
+                                 <Spinner
+                                    as="span"
+                                    animation="border"
+                                    size="sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                    />{` `} SetMaxRecipientCount
+                            </Button>
+                        }
+
                     </Form>
+                    
+
                    
 
                         
