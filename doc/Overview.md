@@ -17,9 +17,9 @@ Module used to create simple airdrops that is commpatible with any ERC20 token, 
 
 ## Sample dApp
 - github repo URL
-    https://github.com/john082Coder/BunzzAuctionERC1155ModuleTest
+    https://github.com/john082Coder/BunzzAirdropERC20ModuleTest
 - simple dapp URL
-    https://bunzz-auction-erc-1155-module-test.vercel.app/
+    https://bunzz-airdrop-erc-20-module-test.vercel.app/
 
 ---
 ## Review report
